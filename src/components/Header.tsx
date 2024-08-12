@@ -1,23 +1,42 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
 import React, {memo} from 'react';
 import {SharedValue, useSharedValue} from 'react-native-reanimated';
 import {fontSize, heightScale, widthScale} from '../utils/scale';
 import moment from 'moment';
 import {Icons} from '../assets';
 import {colors} from '../styles/colors';
+import {useNavigation} from '@react-navigation/native';
+import {NavigationProps} from '../interfaces/rootStack';
 
 interface IHomeHeaderProps {
-  scrollY: SharedValue<number>;
+  scrollY?: SharedValue<number>;
   goBack?: () => void;
   hideBackButton?: boolean;
+  style?: StyleProp<ViewStyle>;
+
+  title?: string;
 }
 
 const Header = (props: IHomeHeaderProps) => {
-  const {scrollY, goBack, hideBackButton} = props;
+  const {scrollY, goBack, hideBackButton, style, title} = props;
+  const navigation = useNavigation<NavigationProps>();
+
+  const pressGoBack = () => {
+    navigation.goBack();
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {!hideBackButton && (
-        <Pressable style={styles.backBtn}>
+        <Pressable style={styles.backBtn} onPress={pressGoBack}>
           <Image
             style={styles.iconBack}
             width={widthScale(24)}
@@ -28,7 +47,9 @@ const Header = (props: IHomeHeaderProps) => {
           />
         </Pressable>
       )}
-      <Text style={styles.textHeader}>{moment().format('LL')}</Text>
+      <Text style={styles.textHeader}>
+        {title ? title : moment().format('LL')}
+      </Text>
     </View>
   );
 };
@@ -39,7 +60,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: heightScale(16),
+    paddingVertical: heightScale(32),
     flexDirection: 'row',
   },
   textHeader: {

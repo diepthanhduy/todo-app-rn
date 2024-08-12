@@ -3,16 +3,17 @@ import React from 'react';
 import {scale, widthScale} from '../utils/scale';
 import {colors} from '../styles/colors';
 import {Icons} from '../assets';
-import Animated, {
-  BounceIn,
-  BounceOut,
-  useAnimatedStyle,
-  useSharedValue,
-  withDecay,
-} from 'react-native-reanimated';
+import Animated, {BounceIn, useAnimatedStyle} from 'react-native-reanimated';
 
-const CheckBox = () => {
-  const [isChecked, setIsChecked] = React.useState(false);
+interface ICheckBoxProps {
+  disabled?: boolean;
+  isChecked?: boolean;
+  onChange?: (isChecked: boolean) => void;
+}
+
+const CheckBox = (props: ICheckBoxProps) => {
+  const {disabled, isChecked: isCheckProp, onChange} = props;
+  const [isChecked, setIsChecked] = React.useState(isCheckProp);
 
   const checkBoxStyle = useAnimatedStyle(() => {
     return {
@@ -21,11 +22,13 @@ const CheckBox = () => {
     };
   });
 
+  const onPress = () => {
+    setIsChecked(!isChecked);
+    onChange && onChange(!isChecked);
+  };
+
   return (
-    <Pressable
-      onPress={() => {
-        setIsChecked(!isChecked);
-      }}>
+    <Pressable disabled={disabled} onPress={onPress}>
       <Animated.View style={checkBoxStyle}>
         {isChecked && (
           <Animated.Image

@@ -1,11 +1,26 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyleAndroid,
+  View,
+} from 'react-native';
 import React, {memo, useMemo} from 'react';
 import {fontSize, widthScale} from '../utils/scale';
 import {Images} from '../assets';
 import {colors} from '../styles/colors';
 import CheckBox from './CheckBox';
+import {ITodo} from '../interfaces';
+import moment from 'moment';
 
-const TodoItem = (props: any) => {
+interface ITodoItem {
+  item: ITodo;
+  isFirst?: boolean;
+  isLast?: boolean;
+}
+
+const TodoItem = (props: ITodoItem) => {
   const {isFirst, isLast, item} = props;
 
   const itemStyle = useMemo(() => {
@@ -16,23 +31,47 @@ const TodoItem = (props: any) => {
     ];
   }, [isFirst, isLast]);
 
+  const textContainerStyle = useMemo(() => {
+    return [
+      styles.textContainer,
+      {
+        opacity: item?.completed ? 0.5 : 1,
+      },
+    ];
+  }, [item?.completed]);
+
+  const textTitleStyle: any = useMemo(() => {
+    return [
+      styles.textTitle,
+      {
+        textDecorationLine: item?.completed ? 'line-through' : 'none',
+      },
+    ];
+  }, [item?.completed]);
+
   return (
     <View style={itemStyle}>
-      <View style={styles.imageBox}>
+      <View
+        style={[
+          styles.imageBox,
+          {
+            opacity: item?.completed ? 0.5 : 1,
+          },
+        ]}>
         <Image style={styles.image} source={Images.fileList} />
       </View>
 
-      <View style={styles.textContainer}>
-        <Text numberOfLines={2} style={styles.textTitle}>
+      <View style={textContainerStyle}>
+        <Text numberOfLines={2} style={textTitleStyle}>
           {item?.title || 'TodoItem'}
         </Text>
         <Text numberOfLines={2} style={styles.textTime}>
-          {item?.time || 'Time'}
+          {item?.time ? moment(item?.time).format('lll') : 'No Time'}
         </Text>
       </View>
 
       <View>
-        <CheckBox />
+        <CheckBox isChecked={item?.completed} disabled={item?.completed} />
       </View>
     </View>
   );
@@ -78,7 +117,7 @@ const styles = StyleSheet.create({
   textTime: {
     fontSize: fontSize(14),
     fontWeight: '400',
-    color: colors.black(0.7),
+    color: colors.black('70'),
   },
   textContainer: {
     flex: 1,

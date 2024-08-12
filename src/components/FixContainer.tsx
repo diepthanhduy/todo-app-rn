@@ -4,6 +4,7 @@ import {
   NativeSafeAreaViewProps,
   SafeAreaView,
 } from 'react-native-safe-area-context';
+import {colors} from '../styles/colors';
 
 interface Props {
   backgroundColor?: string;
@@ -20,7 +21,7 @@ const FixContainer = ({
       style={[
         styles.view,
         {
-          backgroundColor: backgroundColor || 'white',
+          backgroundColor: backgroundColor,
         },
       ]}
       edges={['top', 'bottom']}
@@ -39,6 +40,6 @@ export default memo(FixContainer);
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: colors.background,
   },
 });
