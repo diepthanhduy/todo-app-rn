@@ -1,5 +1,6 @@
 import {
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,21 +11,158 @@ import React from 'react';
 import Header from '../components/Header';
 import {colors} from '../styles/colors';
 import {fontSize, heightScale, widthScale} from '../utils/scale';
+import PrimaryButton from '../components/PrimaryButton';
+import Category from '../components/CreateTask/Category';
+import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
+import {useSharedValue} from 'react-native-reanimated';
+import {ITodo} from '../interfaces';
+import useAppStore from '../store/store';
 
 const CreateTask = () => {
+  const [date, setDate] = React.useState(new Date());
+  const [isOpenDatePicker, setIsOpenDatePicker] = React.useState(false);
+  const [isOpenTimePicker, setIsOpenTimePicker] = React.useState(false);
+  const [time, setTime] = React.useState(new Date());
+  const [modeDatePicker, setModeDatePicker] = React.useState<'date' | 'time'>(
+    'date',
+  );
+  const [title, setTitle] = React.useState('');
+  const [note, setNote] = React.useState('');
+
+  const {addTodo} = useAppStore();
+
+  const pressSave = () => {
+    console.log('first', {
+      title,
+      note,
+      date: date,
+      time: time,
+    });
+
+    const timeTodo = moment(date)
+      .set('hour', time.getHours())
+      .set('minute', time.getMinutes())
+      .toDate();
+
+    const todo: ITodo = {
+      id: moment().valueOf(),
+      title,
+      completed: false,
+      time: timeTodo,
+      deleted_at: new Date(),
+    };
+    addTodo(todo);
+  };
+
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Header title="Add New Task" style={{backgroundColor: colors.primary}} />
 
-      <View style={styles.containerContent}>
-        <View style={styles.section}>
-          <Text style={styles.textTitle}>Task title</Text>
-          <View style={styles.boxBorder}>
-            <TextInput style={styles.input} />
+      <ScrollView style={styles.container}>
+        <View style={styles.containerContent}>
+          <View style={styles.section}>
+            <Text style={styles.textTitle}>Task title</Text>
+            <View style={styles.boxBorder}>
+              <TextInput
+                value={title}
+                onChangeText={setTitle}
+                style={styles.input}
+                placeholder="Task Title"
+              />
+            </View>
+          </View>
+
+          {/* Category */}
+          <View style={styles.section}>
+            <Category />
+          </View>
+
+          {/* Due Date */}
+          <View style={styles.containerDateTime}>
+            <View style={styles.section}>
+              <Text style={styles.textTitle}>Date</Text>
+              <View style={styles.boxBorder}>
+                <Pressable
+                  hitSlop={20}
+                  onPress={() => {
+                    setIsOpenDatePicker(!isOpenDatePicker);
+                    setModeDatePicker('date');
+                  }}>
+                  <Text>{moment(date).format('DD/MM/YYYY')}</Text>
+                </Pressable>
+                <DatePicker
+                  minimumDate={new Date()}
+                  modal
+                  mode={modeDatePicker}
+                  open={isOpenDatePicker}
+                  date={new Date()}
+                  onConfirm={(date: Date) => {
+                    setDate(date);
+                    setIsOpenDatePicker(false);
+                  }}
+                  onCancel={() => setIsOpenDatePicker(false)}
+                />
+              </View>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.textTitle}>Time</Text>
+              <View style={styles.boxBorder}>
+                <Pressable
+                  hitSlop={20}
+                  onPress={() => {
+                    setIsOpenTimePicker(true);
+                    setModeDatePicker('time');
+                  }}>
+                  <Text>{moment(time).format('HH:mm')}</Text>
+                </Pressable>
+
+                <DatePicker
+                  modal
+                  minimumDate={undefined}
+                  mode={modeDatePicker}
+                  open={isOpenTimePicker}
+                  date={new Date()}
+                  onConfirm={(date: Date) => {
+                    setIsOpenTimePicker(false);
+
+                    setTime(date);
+                  }}
+                  onCancel={() => setIsOpenTimePicker(false)}
+                  hitSlop={50}
+                />
+              </View>
+            </View>
+          </View>
+
+          {/* Notes */}
+          <View style={styles.section}>
+            <Text style={styles.textTitle}>Notes</Text>
+            <View style={styles.boxBorder}>
+              <TextInput
+                value={note}
+                onChangeText={setNote}
+                style={[styles.input, {textAlignVertical: 'top'}]}
+                placeholder="Notes"
+                multiline
+                numberOfLines={8}
+              />
+            </View>
           </View>
         </View>
+      </ScrollView>
+
+      <View style={styles.containerBottomBtn}>
+        <PrimaryButton
+          onPress={() => {
+            console.log('onpress create');
+            pressSave();
+          }}
+          title="Save"
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -37,11 +175,14 @@ const styles = StyleSheet.create({
   },
 
   containerContent: {
+    flex: 1,
     paddingHorizontal: widthScale(16),
+    paddingVertical: heightScale(12),
   },
 
   section: {
-    paddingVertical: heightScale(24),
+    paddingVertical: heightScale(12),
+    flex: 1,
   },
   textTitle: {
     fontSize: fontSize(14),
@@ -60,5 +201,14 @@ const styles = StyleSheet.create({
 
   input: {
     paddingVertical: Platform.OS === 'android' ? 0 : 6,
+  },
+
+  containerBottomBtn: {
+    padding: widthScale(16),
+  },
+
+  containerDateTime: {
+    flexDirection: 'row',
+    gap: widthScale(8),
   },
 });
