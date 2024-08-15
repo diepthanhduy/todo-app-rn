@@ -25,24 +25,24 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../interfaces/rootStack';
 
 const CreateTask = () => {
-  const todo =
+  const todoParam =
     useRoute<RouteProp<RootStackParamList, 'CreateTask'>>()?.params?.todo;
 
   const {addTodo, todoTypes, updateTodo} = useAppStore();
 
-  const [date, setDate] = React.useState(todo?.time || new Date());
+  const [date, setDate] = React.useState(todoParam?.time || new Date());
   const [isOpenDatePicker, setIsOpenDatePicker] = React.useState(false);
   const [isOpenTimePicker, setIsOpenTimePicker] = React.useState(false);
   const [time, setTime] = React.useState(
-    todo?.time || moment().add('minute', 30).toDate(),
+    todoParam?.time || moment().add('minute', 30).toDate(),
   );
   const [modeDatePicker, setModeDatePicker] = React.useState<'date' | 'time'>(
     'date',
   );
-  const [title, setTitle] = React.useState(todo?.title || '');
-  const [note, setNote] = React.useState(todo?.note || '');
+  const [title, setTitle] = React.useState(todoParam?.title || '');
+  const [note, setNote] = React.useState(todoParam?.note || '');
   const [iSelectType, setISelectType] = React.useState(
-    Number(todo?.type_id) || 0,
+    Number(todoParam?.type_id) || 0,
   );
 
   const isDisabled = !title || !date || !time;
@@ -55,7 +55,7 @@ const CreateTask = () => {
   };
 
   const showToast = () => {
-    if (todo) {
+    if (todoParam) {
       Toast.show({
         type: 'success',
         text1: 'Updated',
@@ -71,7 +71,7 @@ const CreateTask = () => {
   };
 
   const handleUpdateTodo = () => {
-    if (!todo?.id) return;
+    if (!todoParam?.id) return;
 
     const timeTodo = moment(date)
       .set('hour', time.getHours())
@@ -81,7 +81,7 @@ const CreateTask = () => {
     const typeTodo = todoTypes[iSelectType];
 
     const todoUpdate: ITodo = {
-      id: todo?.id,
+      id: todoParam?.id,
       title,
       completed: false,
       time: timeTodo,
@@ -95,7 +95,7 @@ const CreateTask = () => {
   };
 
   const pressSave = () => {
-    if (props?.todo) {
+    if (todoParam) {
       handleUpdateTodo();
       showToast();
       return;

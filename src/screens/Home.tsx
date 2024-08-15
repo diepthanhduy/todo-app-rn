@@ -23,26 +23,7 @@ import {NavigationProps} from '../interfaces/rootStack';
 const Home = () => {
   const offsetY = useSharedValue(0);
   const navigation = useNavigation<NavigationProps>();
-  const {todos: data, cacheTodos} = useAppStore();
-
-  useEffect(() => {
-    InteractionManager.runAfterInteractions(async () => {
-      getTodoToday();
-    });
-  }, []);
-
-  const getTodoToday = () => {
-    const today = new Date();
-    const todayTodos = data.filter(todo => {
-      return (
-        todo.time &&
-        new Date(todo.time).getDate() === today.getDate() &&
-        new Date(todo.time).getMonth() === today.getMonth() &&
-        new Date(todo.time).getFullYear() === today.getFullYear()
-      );
-    });
-    cacheTodos(todayTodos);
-  };
+  const {todos: data} = useAppStore();
 
   const pressAddTaskBtn = () => {
     console.log('Button Pressed');
