@@ -1,4 +1,4 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, PressableProps, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {heightScale} from '../utils/scale';
 import {colors} from '../styles/colors';
@@ -6,13 +6,14 @@ import {colors} from '../styles/colors';
 interface IPrimaryButtonProps {
   title: string;
   onPress: () => void;
+  disabled?: boolean;
 }
 
-const PrimaryButton = (props: IPrimaryButtonProps) => {
-  const {onPress, title} = props;
+const PrimaryButton = (props: IPrimaryButtonProps & PressableProps) => {
+  const {onPress, title, disabled = false, ...rest} = props;
   return (
-    <Pressable onPress={onPress}>
-      <View style={styles.container}>
+    <Pressable onPress={onPress} {...rest} disabled={disabled}>
+      <View style={[styles.container, {opacity: disabled ? 0.6 : 1}]}>
         <Text style={styles.text}>{title}</Text>
       </View>
     </Pressable>

@@ -3,9 +3,30 @@ import React from 'react';
 import CategoryImage from '../CategoryImage';
 import {fontSize, heightScale, widthScale} from '../../utils/scale';
 import {colors} from '../../styles/colors';
+import useAppStore from '../../store/store';
+import {ITodoType} from '../../interfaces';
+import * as RNFS from '@dr.pogodin/react-native-fs';
 import {Images} from '../../assets';
 
-const Category = () => {
+interface ICategoryProps {
+  onPressAdd: () => void;
+  onSelected: (index: number) => void;
+}
+const Category = (props: ICategoryProps) => {
+  const {todoTypes} = useAppStore();
+
+  const [iSelected, setISelected] = React.useState(0);
+
+  const {onPressAdd, onSelected} = props;
+
+  const getImagePath = (item: ITodoType) => {
+    if ([0, 1, 2].includes(+item?.id)) {
+      const Img: any = Images;
+      return Img[item?.image || 'fileList'];
+    }
+
+    return {uri: `${RNFS.DocumentDirectoryPath}/${item?.image}`};
+  };
   return (
     <View style={{flex: 1}}>
       <Text style={styles.textTitle}>Category</Text>
@@ -14,17 +35,24 @@ const Category = () => {
           style={styles.list}
           horizontal
           contentContainerStyle={{gap: widthScale(8)}}>
-          {Array.from({length: 20}).map((_, index) => (
-            <CategoryImage
+          {todoTypes.map((item, index) => (
+            <Pressable
               key={index}
-              source={Images.fileList}
-              backgroundColor={colors.second}
-            />
+              onPress={() => {
+                setISelected(index);
+                onSelected(index);
+              }}>
+              <CategoryImage
+                source={getImagePath(item) as any}
+                backgroundColor={item?.color || colors.second}
+                isSelected={iSelected === index}
+              />
+            </Pressable>
           ))}
         </ScrollView>
 
         <View style={styles.containerMore}>
-          <Pressable style={styles.addBtn}>
+          <Pressable style={styles.addBtn} onPress={onPressAdd}>
             <Text style={styles.textAddBtn}>Add</Text>
           </Pressable>
         </View>

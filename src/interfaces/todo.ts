@@ -3,7 +3,9 @@ export interface ITodo {
   title: string;
   completed: boolean;
   time: Date | null;
-  type?: string;
+  color?: string | null;
+  image?: string | null;
+  type_id?: number | string;
 
   created_at?: Date;
   updated_at?: Date;

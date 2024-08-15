@@ -30,19 +30,19 @@ export const todos: ITodo[] = [
 export const todoTypes: ITodoType[] = [
   {
     id: 1,
-    color_hex: null,
+    color: null,
     image: null,
     type: 'STUDY',
   },
   {
     id: 2,
-    color_hex: null,
+    color: null,
     image: null,
     type: 'WORK',
   },
   {
     id: 3,
-    color_hex: null,
+    color: null,
     image: null,
     type: 'FITNESS',
   },

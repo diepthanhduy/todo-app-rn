@@ -14,15 +14,17 @@ import {widthScale} from '../utils/scale';
 interface ICategoryImage {
   source: ImageSourcePropType;
   backgroundColor?: string;
+  isSelected?: boolean;
 }
 const CategoryImage = (props: ICategoryImage) => {
-  const {source, backgroundColor} = props;
+  const {source, backgroundColor, isSelected} = props;
   const styleContainer: StyleProp<ViewStyle> = React.useMemo(() => {
     return {
       ...styles.container,
       backgroundColor,
+      opacity: isSelected ? 1 : 0.4,
     };
-  }, [backgroundColor]);
+  }, [backgroundColor, isSelected]);
 
   return (
     <View style={styleContainer}>

@@ -1,11 +1,4 @@
-import {
-  Image,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextStyleAndroid,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {memo, useMemo} from 'react';
 import {fontSize, widthScale} from '../utils/scale';
 import {Images} from '../assets';
@@ -13,6 +6,7 @@ import {colors} from '../styles/colors';
 import CheckBox from './CheckBox';
 import {ITodo} from '../interfaces';
 import moment from 'moment';
+import * as RNFS from '@dr.pogodin/react-native-fs';
 
 interface ITodoItem {
   item: ITodo;
@@ -22,6 +16,15 @@ interface ITodoItem {
 
 const TodoItem = (props: ITodoItem) => {
   const {isFirst, isLast, item} = props;
+
+  const getImagePath = (todo: ITodo) => {
+    if ([0, 1, 2].includes(item?.type_id ? +item?.type_id : 0)) {
+      const Img: any = Images;
+      return Img[todo?.image || 'fileList'];
+    }
+
+    return {uri: `${RNFS.DocumentDirectoryPath}/${todo?.image}`};
+  };
 
   const itemStyle = useMemo(() => {
     return [
@@ -56,9 +59,10 @@ const TodoItem = (props: ITodoItem) => {
           styles.imageBox,
           {
             opacity: item?.completed ? 0.5 : 1,
+            backgroundColor: item?.color || colors.second,
           },
         ]}>
-        <Image style={styles.image} source={Images.fileList} />
+        <Image style={styles.image} source={getImagePath(item) as any} />
       </View>
 
       <View style={textContainerStyle}>

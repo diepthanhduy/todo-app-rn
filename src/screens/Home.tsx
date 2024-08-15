@@ -1,17 +1,9 @@
-import {
-  FlatList,
-  SectionList,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import React, {useState} from 'react';
+import {SectionList, StatusBar, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
 import {colors} from '../styles/colors';
 import {fontSize, heightScale, widthScale} from '../utils/scale';
-import FixContainer from '../components/FixContainer';
 import Header from '../components/Header';
-import {SharedValue, useSharedValue} from 'react-native-reanimated';
+import {useSharedValue} from 'react-native-reanimated';
 import TodoItem from '../components/TodoItem';
 import {createSectionData} from '../utils/chunkData';
 
@@ -67,6 +59,15 @@ const Home = () => {
     return <View style={styles.itemSeparator} />;
   }, []);
 
+  const renderEmptyList = React.useCallback(() => {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.textHeaderEmpty}>No event</Text>
+        <Text style={styles.textContentEmpty}>You have no upcoming events</Text>
+      </View>
+    );
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.container}>
@@ -78,7 +79,7 @@ const Home = () => {
         <View style={styles.backgroundHeader} />
 
         <SectionList
-          sections={createSectionData(data)}
+          sections={data.length ? createSectionData(data) : []}
           ItemSeparatorComponent={renderSeparator}
           renderSectionHeader={renderSectionHeader}
           renderItem={renderItem}
@@ -89,6 +90,7 @@ const Home = () => {
             offsetY.value = e.nativeEvent.contentOffset.y;
           }}
           removeClippedSubviews
+          ListEmptyComponent={renderEmptyList}
         />
       </View>
       <View style={styles.containerBottomBtn}>
@@ -104,6 +106,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   backgroundHeader: {
@@ -126,6 +133,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
+  textHeaderEmpty: {
+    fontSize: fontSize(24),
+    color: 'white',
+    fontWeight: '500',
+  },
+  textContentEmpty: {
+    fontSize: fontSize(14),
+    color: 'white',
+    fontWeight: '400',
+  },
+
   containerList: {
     paddingHorizontal: widthScale(16),
   },
@@ -145,5 +163,9 @@ const styles = StyleSheet.create({
 
   containerBottomBtn: {
     padding: widthScale(16),
+  },
+  imgEmpty: {
+    width: '100%',
+    height: 'auto',
   },
 });
