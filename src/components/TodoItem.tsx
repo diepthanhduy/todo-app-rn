@@ -1,5 +1,13 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React, {memo, useMemo} from 'react';
+import {
+  Image,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
+import React, {memo, useCallback, useMemo} from 'react';
 import {fontSize, widthScale} from '../utils/scale';
 import {Images} from '../assets';
 import {colors} from '../styles/colors';
@@ -7,15 +15,21 @@ import CheckBox from './CheckBox';
 import {ITodo} from '../interfaces';
 import moment from 'moment';
 import * as RNFS from '@dr.pogodin/react-native-fs';
+import useAppStore from '../store/store';
 
 interface ITodoItem {
   item: ITodo;
   isFirst?: boolean;
   isLast?: boolean;
+  onPressItem: (item: ITodo) => void;
 }
 
 const TodoItem = (props: ITodoItem) => {
-  const {isFirst, isLast, item} = props;
+  const {isFirst, isLast, item, onPressItem} = props;
+  const {completeTodo, undoComplete} = useAppStore();
+
+  const diffDay = moment().diff(item?.time, 'days');
+  const isDisabled = item?.completed && diffDay > 2;
 
   const getImagePath = (todo: ITodo) => {
     if ([0, 1, 2].includes(item?.type_id ? +item?.type_id : 0)) {
@@ -25,6 +39,17 @@ const TodoItem = (props: ITodoItem) => {
 
     return {uri: `${RNFS.DocumentDirectoryPath}/${todo?.image}`};
   };
+
+  const onCheck = useCallback(
+    (status: boolean) => {
+      if (status) {
+        completeTodo(item?.id || 0);
+      } else {
+        undoComplete(item?.id || 0);
+      }
+    },
+    [item?.id, completeTodo, undoComplete],
+  );
 
   const itemStyle = useMemo(() => {
     return [
@@ -52,32 +77,48 @@ const TodoItem = (props: ITodoItem) => {
     ];
   }, [item?.completed]);
 
+  const styleImageBox: StyleProp<ViewStyle> = useMemo(() => {
+    return [
+      styles.imageBox,
+      {
+        opacity: item?.completed ? 0.5 : 1,
+        backgroundColor: item?.color || colors.second,
+      },
+    ];
+  }, [item?.color, item?.completed]);
+
+  const pressOnItem = useCallback(() => {
+    if (isDisabled) {
+      return;
+    }
+    onPressItem(item);
+  }, [item, onPressItem, isDisabled]);
+
   return (
-    <View style={itemStyle}>
-      <View
-        style={[
-          styles.imageBox,
-          {
-            opacity: item?.completed ? 0.5 : 1,
-            backgroundColor: item?.color || colors.second,
-          },
-        ]}>
-        <Image style={styles.image} source={getImagePath(item) as any} />
-      </View>
+    <Pressable onPress={pressOnItem}>
+      <View style={itemStyle}>
+        <View style={styleImageBox}>
+          <Image style={styles.image} source={getImagePath(item) as any} />
+        </View>
 
-      <View style={textContainerStyle}>
-        <Text numberOfLines={2} style={textTitleStyle}>
-          {item?.title || 'TodoItem'}
-        </Text>
-        <Text numberOfLines={2} style={styles.textTime}>
-          {item?.time ? moment(item?.time).format('lll') : 'No Time'}
-        </Text>
-      </View>
+        <View style={textContainerStyle}>
+          <Text numberOfLines={2} style={textTitleStyle}>
+            {item?.title || 'TodoItem'}
+          </Text>
+          <Text numberOfLines={2} style={styles.textTime}>
+            {item?.time ? moment(item?.time).format('lll') : 'No Time'}
+          </Text>
+        </View>
 
-      <View>
-        <CheckBox isChecked={item?.completed} disabled={item?.completed} />
+        <View>
+          <CheckBox
+            onChange={onCheck}
+            isChecked={item?.completed}
+            disabled={isDisabled}
+          />
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

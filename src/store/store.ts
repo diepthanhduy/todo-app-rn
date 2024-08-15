@@ -2,7 +2,6 @@ import {create} from 'zustand';
 import {ITodo, ITodoType} from '../interfaces';
 import {createJSONStorage, persist} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Images} from '../assets';
 
 type State = {
   todos: ITodo[];
@@ -13,6 +12,9 @@ type Actions = {
   cacheTodos: (todos: ITodo[]) => void;
   cacheTodoTypes: (todoTypes: ITodoType[]) => void;
   addTodo: (todo: ITodo) => void;
+  completeTodo: (id: number | string) => void;
+  undoComplete: (id: number | string) => void;
+  updateTodo: (todo: ITodo) => void;
 };
 
 const useAppStore = create<State & Actions>()(
@@ -47,6 +49,28 @@ const useAppStore = create<State & Actions>()(
       },
       addTodo(todo) {
         set(state => ({...state, todos: [...state.todos, todo]}));
+      },
+      completeTodo(id) {
+        set(state => ({
+          ...state,
+          todos: state.todos.map(todo =>
+            todo.id === id ? {...todo, completed: true} : todo,
+          ),
+        }));
+      },
+      undoComplete(id) {
+        set(state => ({
+          ...state,
+          todos: state.todos.map(todo =>
+            todo.id === id ? {...todo, completed: false} : todo,
+          ),
+        }));
+      },
+      updateTodo(todo) {
+        set(state => ({
+          ...state,
+          todos: state.todos.map(t => (t.id === todo.id ? {...t, ...todo} : t)),
+        }));
       },
     }),
     {

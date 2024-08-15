@@ -1,5 +1,12 @@
-import {SectionList, StatusBar, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {
+  InteractionManager,
+  SectionList,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
 import {colors} from '../styles/colors';
 import {fontSize, heightScale, widthScale} from '../utils/scale';
 import Header from '../components/Header';
@@ -18,16 +25,46 @@ const Home = () => {
   const navigation = useNavigation<NavigationProps>();
   const {todos: data, cacheTodos} = useAppStore();
 
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(async () => {
+      getTodoToday();
+    });
+  }, []);
+
+  const getTodoToday = () => {
+    const today = new Date();
+    const todayTodos = data.filter(todo => {
+      return (
+        todo.time &&
+        new Date(todo.time).getDate() === today.getDate() &&
+        new Date(todo.time).getMonth() === today.getMonth() &&
+        new Date(todo.time).getFullYear() === today.getFullYear()
+      );
+    });
+    cacheTodos(todayTodos);
+  };
+
   const pressAddTaskBtn = () => {
     console.log('Button Pressed');
     navigation.navigate('CreateTask');
   };
 
+  const pressOnItem = useCallback((todo: ITodo) => {
+    navigation.navigate('CreateTask', {todo});
+  }, []);
+
   const renderItem = React.useCallback(
     ({item, index, section}: {item: ITodo; index: number; section: any}) => {
       const isFirst = index === 0;
       const isLast = index === section.data.length - 1;
-      return <TodoItem item={item} isFirst={isFirst} isLast={isLast} />;
+      return (
+        <TodoItem
+          onPressItem={pressOnItem}
+          item={item}
+          isFirst={isFirst}
+          isLast={isLast}
+        />
+      );
     },
     [],
   );

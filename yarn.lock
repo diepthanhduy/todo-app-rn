@@ -413,6 +413,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/plugin-proposal-decorators@npm:^7.24.7":
+  version: 7.24.7
+  resolution: "@babel/plugin-proposal-decorators@npm:7.24.7"
+  dependencies:
+    "@babel/helper-create-class-features-plugin": ^7.24.7
+    "@babel/helper-plugin-utils": ^7.24.7
+    "@babel/plugin-syntax-decorators": ^7.24.7
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 75aa5ff5537d5ff77f0e52eb161a2f67c7d2bfd8f2000be710dedb1dd238b43ce53d2f734f84bda95b3f013b69de126403f84167f4eddb1d35e8f26257ee07c8
+  languageName: node
+  linkType: hard
+
 "@babel/plugin-proposal-export-default-from@npm:^7.0.0":
   version: 7.24.7
   resolution: "@babel/plugin-proposal-export-default-from@npm:7.24.7"
@@ -551,6 +564,17 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 3e80814b5b6d4fe17826093918680a351c2d34398a914ce6e55d8083d72a9bdde4fbaf6a2dcea0e23a03de26dc2917ae3efd603d27099e2b98380345703bf948
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-syntax-decorators@npm:^7.24.7":
+  version: 7.24.7
+  resolution: "@babel/plugin-syntax-decorators@npm:7.24.7"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.24.7
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: dc303bcc1f5df61638f1eddc69dd55e65574bd43d8a4a098d3589f5a742e93a4ca3a173967b34eb95e4eaa994799b4c72bfed8688036e43c634be7f24db01ac5
   languageName: node
   linkType: hard
 
@@ -1600,6 +1624,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:7.21.0":
+  version: 7.21.0
+  resolution: "@babel/runtime@npm:7.21.0"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: 7b33e25bfa9e0e1b9e8828bb61b2d32bdd46b41b07ba7cb43319ad08efc6fda8eb89445193e67d6541814627df0ca59122c0ea795e412b99c5183a0540d338ab
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.20.0, @babel/runtime@npm:^7.8.4":
   version: 7.25.0
   resolution: "@babel/runtime@npm:7.25.0"
@@ -2146,6 +2179,35 @@ __metadata:
   peerDependencies:
     react-native: "*"
   checksum: f3b3ea116653d4dc7b50f8124898f9e22567ae30306225841d2057bc9ce40d451b15436dff3e60e0e042ffd7f34338054b202cd2dc61c5dc5eab7676b625b9f9
+  languageName: node
+  linkType: hard
+
+"@nozbe/simdjson@npm:3.1.0-wmelon1":
+  version: 3.1.0-wmelon1
+  resolution: "@nozbe/simdjson@npm:3.1.0-wmelon1"
+  checksum: 161bbeaeb469468b16c67ac2ec07f9b486f79eb46a89cc306e0d836ba4fe8bf6734f1aac7140a0abc8323ca8ed58c0b6380cf15a0345757fca233ffd061a6097
+  languageName: node
+  linkType: hard
+
+"@nozbe/sqlite@npm:3.40.1":
+  version: 3.40.1
+  resolution: "@nozbe/sqlite@npm:3.40.1"
+  checksum: 7a603f836bccdf2d87af5c69595bc10a481aed489c7eab317b56f0fa4cd64d7913a6f5a2e34ea2098598322ffaf79e2ce5e94b930e555e3bda758052f63fcc75
+  languageName: node
+  linkType: hard
+
+"@nozbe/watermelondb@npm:^0.27.1":
+  version: 0.27.1
+  resolution: "@nozbe/watermelondb@npm:0.27.1"
+  dependencies:
+    "@babel/runtime": 7.21.0
+    "@nozbe/simdjson": 3.1.0-wmelon1
+    "@nozbe/sqlite": 3.40.1
+    hoist-non-react-statics: ^3.3.2
+    lokijs: "npm:@nozbe/lokijs@1.5.12-wmelon6"
+    rxjs: ^7.8.0
+    sql-escape-string: ^1.1.0
+  checksum: 6bb1b71f96e03aac26aa7ef266fb0eca8588000204516d497010f0b15b69628b143009f9f2cad1256b85591aed0411c8b310b802e8d4e9414bb7db68d966d1de
   languageName: node
   linkType: hard
 
@@ -5432,7 +5494,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.3.0":
+"hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -6834,6 +6896,13 @@ __metadata:
   bin:
     logkitty: bin/logkitty.js
   checksum: f1af990ff09564ef5122597a52bba6d233302c49865e6ddea1343d2a0e2efe3005127e58e93e25c98b6b1f192731fc5c52e3204876a15fc9a52abc8b4f1af931
+  languageName: node
+  linkType: hard
+
+"lokijs@npm:@nozbe/lokijs@1.5.12-wmelon6":
+  version: 1.5.12-wmelon6
+  resolution: "@nozbe/lokijs@npm:1.5.12-wmelon6"
+  checksum: a7200cccdc836e808650bc73f7045251ff65fd4cb335be2e21a65f516746a1d22e3051658820c719cec486fa193902be55a16df16b287297370088c0d18ae76a
   languageName: node
   linkType: hard
 
@@ -8382,7 +8451,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.13.2":
+"regenerator-runtime@npm:^0.13.11, regenerator-runtime@npm:^0.13.2":
   version: 0.13.11
   resolution: "regenerator-runtime@npm:0.13.11"
   checksum: 27481628d22a1c4e3ff551096a683b424242a216fee44685467307f14d58020af1e19660bf2e26064de946bad7eff28950eae9f8209d55723e2d9351e632bbb4
@@ -8597,6 +8666,15 @@ __metadata:
   dependencies:
     queue-microtask: ^1.2.2
   checksum: cb4f97ad25a75ebc11a8ef4e33bb962f8af8516bb2001082ceabd8902e15b98f4b84b4f8a9b222e5d57fc3bd1379c483886ed4619367a7680dad65316993021d
+  languageName: node
+  linkType: hard
+
+"rxjs@npm:^7.8.0":
+  version: 7.8.1
+  resolution: "rxjs@npm:7.8.1"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: de4b53db1063e618ec2eca0f7965d9137cabe98cf6be9272efe6c86b47c17b987383df8574861bcced18ebd590764125a901d5506082be84a8b8e364bf05f119
   languageName: node
   linkType: hard
 
@@ -8949,6 +9027,13 @@ __metadata:
   version: 1.0.3
   resolution: "sprintf-js@npm:1.0.3"
   checksum: 19d79aec211f09b99ec3099b5b2ae2f6e9cdefe50bc91ac4c69144b6d3928a640bb6ae5b3def70c2e85a2c3d9f5ec2719921e3a59d3ca3ef4b2fd1a4656a0df3
+  languageName: node
+  linkType: hard
+
+"sql-escape-string@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "sql-escape-string@npm:1.1.0"
+  checksum: 4e65c06031ba81d2bf3d94301b606d2c0254a2b0725ae426bb32015e407dedd45942c85386a8cacad64a76714d296652f94500331657a7676a57b1be48b85380
   languageName: node
   linkType: hard
 
@@ -9331,10 +9416,12 @@ __metadata:
   resolution: "todo@workspace:."
   dependencies:
     "@babel/core": ^7.20.0
+    "@babel/plugin-proposal-decorators": ^7.24.7
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
     "@dr.pogodin/react-native-fs": ^2.27.1
     "@notifee/react-native": ^7.8.2
+    "@nozbe/watermelondb": ^0.27.1
     "@react-native-async-storage/async-storage": ^1.24.0
     "@react-native/babel-preset": 0.74.87
     "@react-native/eslint-config": 0.74.87
@@ -9394,7 +9481,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.1":
+"tslib@npm:^2.0.1, tslib@npm:^2.1.0":
   version: 2.6.3
   resolution: "tslib@npm:2.6.3"
   checksum: 74fce0e100f1ebd95b8995fbbd0e6c91bdd8f4c35c00d4da62e285a3363aaa534de40a80db30ecfd388ed7c313c42d930ee0eaf108e8114214b180eec3dbe6f5

@@ -21,20 +21,29 @@ import {ITodo} from '../interfaces';
 import useAppStore from '../store/store';
 import notifee, {TimestampTrigger, TriggerType} from '@notifee/react-native';
 import Toast from 'react-native-toast-message';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {RootStackParamList} from '../interfaces/rootStack';
 
 const CreateTask = () => {
-  const {addTodo, todoTypes} = useAppStore();
+  const todo =
+    useRoute<RouteProp<RootStackParamList, 'CreateTask'>>()?.params?.todo;
 
-  const [date, setDate] = React.useState(new Date());
+  const {addTodo, todoTypes, updateTodo} = useAppStore();
+
+  const [date, setDate] = React.useState(todo?.time || new Date());
   const [isOpenDatePicker, setIsOpenDatePicker] = React.useState(false);
   const [isOpenTimePicker, setIsOpenTimePicker] = React.useState(false);
-  const [time, setTime] = React.useState(moment().add('minute', 30).toDate());
+  const [time, setTime] = React.useState(
+    todo?.time || moment().add('minute', 30).toDate(),
+  );
   const [modeDatePicker, setModeDatePicker] = React.useState<'date' | 'time'>(
     'date',
   );
-  const [title, setTitle] = React.useState('');
-  const [note, setNote] = React.useState('');
-  const [iSelectType, setISelectType] = React.useState(0);
+  const [title, setTitle] = React.useState(todo?.title || '');
+  const [note, setNote] = React.useState(todo?.note || '');
+  const [iSelectType, setISelectType] = React.useState(
+    Number(todo?.type_id) || 0,
+  );
 
   const isDisabled = !title || !date || !time;
 
@@ -46,14 +55,52 @@ const CreateTask = () => {
   };
 
   const showToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Success',
-      text2: 'You have created a new task',
-    });
+    if (todo) {
+      Toast.show({
+        type: 'success',
+        text1: 'Updated',
+        text2: 'You have updated the task',
+      });
+    } else {
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'You have created a new task',
+      });
+    }
+  };
+
+  const handleUpdateTodo = () => {
+    if (!todo?.id) return;
+
+    const timeTodo = moment(date)
+      .set('hour', time.getHours())
+      .set('minute', time.getMinutes())
+      .toDate();
+
+    const typeTodo = todoTypes[iSelectType];
+
+    const todoUpdate: ITodo = {
+      id: todo?.id,
+      title,
+      completed: false,
+      time: timeTodo,
+      created_at: new Date(),
+
+      type_id: typeTodo?.id,
+      color: typeTodo?.color,
+      image: typeTodo?.image,
+    };
+    updateTodo(todoUpdate);
   };
 
   const pressSave = () => {
+    if (props?.todo) {
+      handleUpdateTodo();
+      showToast();
+      return;
+    }
+
     console.log('first', {
       title,
       note,
@@ -67,9 +114,8 @@ const CreateTask = () => {
       .toDate();
 
     const typeTodo = todoTypes[iSelectType];
-    console.log('🚀 ~ file: CreateTask.tsx:53 ~ typeTodo:', typeTodo);
 
-    const todo: ITodo = {
+    const newTodo: ITodo = {
       id: timeTodo.valueOf(),
       title,
       completed: false,
@@ -80,7 +126,7 @@ const CreateTask = () => {
       color: typeTodo?.color,
       image: typeTodo?.image,
     };
-    addTodo(todo);
+    addTodo(newTodo);
 
     const trigger: TimestampTrigger = {
       timestamp: timeTodo.getTime(),
